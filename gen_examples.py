@@ -44,48 +44,79 @@ def generate_example(positive=True):
         to_return += str(digit)
     return to_return
 
-def rec_wrong_par(str, wronged):
+def rec_wrong_par(str, wronged, length):
     open = '('
     close = ')'
-    option = random.randint(1, 6)
-    if option == 1:
+    option = random.randint(1, 15)
+    if option == 1 and length >= 50:
         if wronged:
             return '()'
         else:
-            return open + rec_wrong_par(str, True)
+            return open + rec_wrong_par(str, True, length + 1)
     elif option == 2:
-        return open + rec_wrong_par(str, wronged) + close
+        return rec_wrong_par(str, True, length + 1) + close
     elif option == 3:
-        return open + close + rec_wrong_par(str, wronged)
+        return open + close + rec_wrong_par(str, wronged, length + 1)
     elif option == 4:
-        return rec_wrong_par(str, wronged) + open + close
+        return rec_wrong_par(str, wronged, length + 1) + open + close
     elif option == 5:
-        return open + rec_wrong_par(str, True)
+        return open + rec_wrong_par(str, True, length + 1)
     else:
-        return rec_wrong_par(str, True) + close
+        return open + rec_wrong_par(str, wronged, length + 1) + close
 
-def rec_correct_par(str):
+def rec_correct_par(str, length):
     open = '('
     close = ')'
-    option = random.randint(1, 4)
-    if option == 1:
+    option = random.randint(1, 15)
+    if option == 1 and length >= 50:
         return '()'
     elif option == 2:
-        return open + rec_correct_par(str) + close
+        return rec_correct_par(str, length + 1) + open + close
     elif option == 3:
-        return open + close + rec_correct_par(str)
+        return open + close + rec_correct_par(str, length + 1)
     else:
-        return rec_correct_par(str) + open + close
+        return open + rec_correct_par(str, length + 1) + close
 
 
 def generate_example_parentheses(positive=True):
     if not positive:
-        return rec_wrong_par('', False)
+        return rec_wrong_par('', False, 0)
     else:
-        return rec_correct_par('')
+        return rec_correct_par('', 0)
+
+def generate_example_an1bn1n2cn2(positive=True):
+    if positive:
+        n1 = random.randint(20, 40)
+        n2 = random.randint(20, 40)
+        return 'a' * n1 + 'b' * n1 + 'b' * n2 + 'c' * n2
+    else:
+        n1 = random.randint(20, 40)
+        n2 = random.randint(20, 40)
+        n3 = random.randint(40, 80)
+
+        if n3 == n1 + n2:
+            while n3 == n1 + n2:
+                n3 = random.randint(40, 80)
+        return 'a' * n1 + 'b' * n3 + 'c' * n2
+
+def generate_example_an1bnmaxcn2(positive=True):
+    if positive:
+        n1 = random.randint(20, 40)
+        n2 = random.randint(20, 40)
+        n3 = random.randint(max(n1, n2) + 1, 41)
+        return 'a' * n1 + 'b' * n3 + 'c' * n2
+    else:
+        n1 = random.randint(20, 40)
+        n2 = random.randint(20, 40)
+        n3 = random.randint(20, max(n1, n2))
+        return 'a' * n1 + 'b' * n3 + 'c' * n2
 def generate_positive_and_negative(num=500, type='original'):
     if type == 'parenthesis':
         generation = generate_example_parentheses
+    elif type == 'an1bn1n2cn2':
+        generation = generate_example_an1bn1n2cn2
+    elif type == 'an1bnmaxcn2':
+        generation = generate_example_an1bnmaxcn2
     else:
         generation = generate_example
     positive = [generation() for i in range(num)]
