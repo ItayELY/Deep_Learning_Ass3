@@ -11,19 +11,19 @@ import random
 from gen_examples import write_to_file, generate_positive_and_negative
 
 TO_CREATE = sys.argv[1]
-TRAIN_SIZE = 1000
-DEV_SIZE = 500
+TRAIN_SIZE_HALF = 1500
+DEV_HALF_SIZE = 500
 CHAR_EMB_SIZE = RNN_OUTPUT_SIZE = 30
 NUM_OF_CHARS = 14
 HIDDEN_LAYER = 24
 OUTPUT_SIZE = 2
-EPOCHS = 3
+EPOCHS = 5
 VOCAB = "123456789abcd"
 FILE_NAME = "./1to9atod"
 
 
 
-def create_dataset(train_size=TRAIN_SIZE, dev_size=DEV_SIZE, file_name=FILE_NAME):
+def create_dataset(TRAIN_SIZE_HALF=TRAIN_SIZE_HALF, DEV_HALF_SIZE=DEV_HALF_SIZE, file_name=FILE_NAME):
 
     def create(file_name, set_size):
         positive, negative = generate_positive_and_negative(set_size)
@@ -34,8 +34,8 @@ def create_dataset(train_size=TRAIN_SIZE, dev_size=DEV_SIZE, file_name=FILE_NAME
         random.shuffle(dataset)
         write_to_file(file_name, dataset)
 
-    create(file_name + "_train", train_size)
-    create(file_name + "_dev", dev_size)
+    create(file_name + "_train", TRAIN_SIZE_HALF)
+    create(file_name + "_dev", DEV_HALF_SIZE)
 
 def read_dataset(file_name=FILE_NAME):
 
